@@ -122,6 +122,11 @@ int** monteCarlo(int **matriz1, int **matriz2, int n){
 		for (i = 0; i < (n-(n/2)); ++i){
 			int iTemporario = rand()%n;
 			int jTemporario = rand()%n;
+
+			// Multiplico a posição caida atraves do rand
+			multiMatrizes(matriz1, matriz2, iTemporario, jTemporario);
+			multiMatrizes(matriz1, matX, iTemporario, jTemporario);
+			multiMatrizes(matrizAleatoriaResposta, matX, iTemporario, jTemporario); 
 			// Lembrando a Matriz1 contem resposta de 50% da multiplicação
 			if (matriz1[iTemporario][jTemporario] == matrizAleatoriaResposta[iTemporario][jTemporario])
 				// Posivel matriz solução
@@ -130,10 +135,11 @@ int** monteCarlo(int **matriz1, int **matriz2, int n){
 				// Troco a matriz aleatoria
 				matrizRespostaAleatoria(matrizAleatoriaResposta, n);
 				matrizFail += 1;
+				posicaoTrue = 0;
 				break;
 			}
 		}
-	}while(posicaoTrue != constRepeat && matrizFail != constRepeat);
+	}while(posicaoTrue != (n/2) || matrizFail != constRepeat);
 	
 
 	// Libera matX
@@ -146,10 +152,10 @@ int** monteCarlo(int **matriz1, int **matriz2, int n){
 	free(matrizAleatoriaResposta);
 };
 
-int** multiMatrizes(int **matriz1, int **matriz2, int n){
+void multiMatrizes(int **matriz1, int **matriz2, int iFinal, int jFinal){
 	int i, j, k;
-	for (i = 0;i < n; ++i) {
-      for (j = 0; j < n; ++j) {
+	for (i = iFinal; i < (iFinal+1); ++i) {
+      for (j = jFinal; j < (jFinal+1); ++j) {
         for (k = 0; k < n; ++k) {
           matriz1[i][j] = matriz1[i][j] + (matriz1[i][k] * matriz2[k][j]); 
 
