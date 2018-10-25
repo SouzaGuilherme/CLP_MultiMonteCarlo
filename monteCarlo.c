@@ -117,22 +117,27 @@ void monteCarlo(int **matriz1, int **matriz2, int n){
 	matrizRespostaAleatoria(matrizAleatoriaResposta, n);
 
 	// Pegando 50% das posições das matrizes e verificando se batem
-	// int posiçõesI[n];
-	// int posiçõesJ[n];
-	// for (i = 0; i < n; ++i){
-	// 	srand( (unsigned)time(NULL) );
-	// 	posiçõesI[i] = rand()%n;
-	// 	posiçõesJ[i] = rand()%n;
-	// }
+	int posicoesI[n];
+	int posicoesJ[n];
+	for (i = 0; i < n; ++i){
+		srand( (unsigned)time(NULL) );
+		posicoesI[i] = rand()%n;
+		sleep(1);
+		posicoesJ[i] = rand()%n;
+		printf("I:%d\n", posicoesI[i]);
+		printf("J:%d\n", posicoesJ[i]);
+	}
+
+	int iTemporario, jTemporario;
 	do{
 		for (i = 0; i < n; ++i){
-			srand( (unsigned)time(NULL) );
-			int iTemporario = rand()%n;
-			int jTemporario = rand()%n;
-
+			iTemporario = posicoesI[i];
+			jTemporario = posicoesJ[i];
 			// Multiplico a posição caida atraves do rand
-			multiMatrizes(matriz1, matriz2, iTemporario, jTemporario, n);
-			multiMatrizes(matriz1, matX, iTemporario, jTemporario, n);
+			if (matrizFail == 0){
+				multiMatrizes(matriz1, matriz2, iTemporario, jTemporario, n);
+				multiMatrizes(matriz1, matX, iTemporario, jTemporario, n);
+			}			
 			multiMatrizes(matrizAleatoriaResposta, matX, iTemporario, jTemporario, n); 
 			// Lembrando a Matriz1 contem resposta de 50% da multiplicação
 			if (matriz1[iTemporario][jTemporario] == matrizAleatoriaResposta[iTemporario][jTemporario]){
@@ -185,10 +190,17 @@ void monteCarlo(int **matriz1, int **matriz2, int n){
 };
 
 void multiMatrizes(int **matriz1, int **matriz2, int iTemporario, int jTemporario, int n){
-	int k;
-    for (k = 0; k < n; ++k) {
-        matriz1[iTemporario][jTemporario] = matriz1[iTemporario][jTemporario] + (matriz1[iTemporario][k] * matriz2[k][jTemporario]); 
-    }
+	int k, **matrizAUX;
+	matrizAUX = (int **) malloc(n*sizeof(int*));
+	for (int i = 0; i < n; ++i)
+		matrizAUX[i] = (int *) malloc(n*sizeof(int));
 
-    
+    for (k = 0; k < n; ++k) {
+        matrizAUX[iTemporario][jTemporario] += (matriz1[iTemporario][k] * matriz2[k][jTemporario]); 
+    }
+    matriz1[iTemporario][jTemporario] = matrizAUX[iTemporario][jTemporario];
+
+    for (int i = 0; i < n; ++i)
+    	free(matrizAUX[i]);
+   	free(matrizAUX);
 };
