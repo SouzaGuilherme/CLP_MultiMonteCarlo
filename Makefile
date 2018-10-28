@@ -32,18 +32,18 @@ fortran:
 	- make clear
 
 ccallf:
+	$(CC) -c ./c/matrix_initialization.c -o cmatrix_initialization.o
+	$(FT) -c ./fortran/monte_carlo.f90 -ffree-form -o fmonte_carlo.o -I. 
+	mv *.o ./modules/
+	$(CC) ./modules/cmatrix_initialization.o ./modules/fmonte_carlo.o ./c/test.c $(CFLAGS) -lgfortran -o ./bin/ccallf
+	- ./bin/ccallf
+
+fcallc:
 	$(CC) -c ./c/monte_carlo.c -o cmonte_carlo.o -I. -D FORTRAN
 	$(FT) -c ./fortran/matrix_initialization.f90 -ffree-form -o fmatrix_initialization.o 
 	mv *.o ./modules/
-	$(CC) ./modules/fmatrix_initialization.o ./modules/cmonte_carlo.o ./c/test.c $(CFLAGS) -lgfortran -o ./bin/cmontecarlo
-	- ./bin/cmontecarlo
-
-fcallc:
-	$(FT) -c ./fortran/monte_carlo.f90 -ffree-form -o fmonte_carlo.o -I. 
-	$(CC) -c ./c/matrix_initialization.c -o cmatrix_initialization.o
-	mv *.o ./modules/
-	$(FT) ./modules/cmatrix_initialization.o ./modules/fmonte_carlo.o ./fortran/test.f90 -o ./bin/fmontecarlo
-	- ./bin/fmontecarlo
+	$(FT) ./modules/fmatrix_initialization.o ./modules/cmonte_carlo.o -o ./bin/fcallc
+	- ./bin/fcallc
 
 clear: 
 	rm -f *.o exec exe ./bin/* ./modules/*.o

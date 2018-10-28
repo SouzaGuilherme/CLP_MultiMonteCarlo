@@ -1,4 +1,9 @@
+/* Inicialização matrix em C
+ * Chamada da implementação do calculo em fortran
+ * Gera Executavel
+ */
 #include "matrix_initialization.h"
+// Apenas a assinatura das funções implementadas em fortran
 #include "monte_carlo.h"
 
 int main() 

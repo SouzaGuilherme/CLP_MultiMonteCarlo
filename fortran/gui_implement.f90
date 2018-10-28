@@ -34,7 +34,7 @@ SUBROUTINE printa(matriz, tamanhoDaMatriz)
         do j=1, tamanhoDaMatriz
             !PQ ISSO AQUI NAO FUNCIONA
             !write(*, '(f)', advance='no'), matriz(i,j)
-            print*, matriz(i, j)
+            print *, matriz(i, j)
         end do
         print *
     end do
