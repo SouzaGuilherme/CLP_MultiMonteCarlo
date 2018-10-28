@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define constRepeat 1000
+#include <time.h>
+#define constRepeat 1000000
 
 void geraMatrizRand(int **matriz, int n); // Paralelizo a criação das 3 matrizes
-int** monteCarlo(int **matriz1, int **matriz2, int n);
+void monteCarlo(int **matriz1, int **matriz2, int n);
 void matrizXAleatoria(int **matX, int n);
 void matrizRespostaAleatoria(int **matX, int n);
-int** multiMatrizes(int **matriz1, int **matriz2, int n);
+void multiMatrizes(int **matriz1, int **matriz2, int iTemporario, int jTemporario, int n);
 
 int main(){
 	int n, i, j;
@@ -34,6 +35,7 @@ int main(){
 	
 	// Gero mas matrizes randomicas
 	geraMatrizRand(matriz1, n);
+	sleep(1);
 	geraMatrizRand(matriz2, n);
 
 	// Teste de Print Somente
@@ -50,6 +52,9 @@ int main(){
 	}
 	printf("\n");
 
+	// CHamo o metodo MonteCarlo
+	monteCarlo(matriz1, matriz2, n);
+
 	// Libero a memoria alocada para cada matriz
 	for (i = 0; i < n; ++i)
 		free(matriz1[i]);
@@ -62,6 +67,7 @@ int main(){
 };
 
 void geraMatrizRand(int **matriz, int n){
+	srand( (unsigned)time(NULL) );
 	for (int i = 0; i < n; ++i){
 		for (int j = 0; j < n; ++j)
 			matriz[i][j] = rand()%100;
@@ -69,6 +75,7 @@ void geraMatrizRand(int **matriz, int n){
 };
 
 void matrizRespostaAleatoria(int **matX, int n){
+	srand( (unsigned)time(NULL) );
 	for (int i = 0; i < n; ++i){
 		for (int j = 0; j < n; ++j)
 			matX[i][j] = rand()%19603;
@@ -76,15 +83,17 @@ void matrizRespostaAleatoria(int **matX, int n){
 };
 
 void matrizXAleatoria(int **matX, int n){
+	srand( (unsigned)time(NULL) );
 	for (int i = 0; i < n; ++i){
 		for (int j = 0; j < n; ++j)
 			matX[i][j] = rand()%2;
 	}	
 }
 
-int** monteCarlo(int **matriz1, int **matriz2, int n){
+void monteCarlo(int **matriz1, int **matriz2, int n){
 	int **matX, **matrizAleatoriaResposta;
-	int i, j, posicaoTrue, matrizFail;
+	int i = 0, j = 0, posicaoTrue = 0, matrizFail = 0;
+	
 	// Aloco Memoria para a matX
 	matX = (int **) malloc(n*sizeof(int*));
 	if (matX == NULL){
@@ -107,34 +116,68 @@ int** monteCarlo(int **matriz1, int **matriz2, int n){
 	matrizXAleatoria(matX, n);
 	matrizRespostaAleatoria(matrizAleatoriaResposta, n);
 
-	// Multiplicando as Matrizes
-	int randLinha = rand()%n;
-	/* 	ACHO QUE ISSO DEVE ACONTECER DENTRO DO DO DO-WHILE POIS DESSA
-		FORMA PEGO A POSIÇÃO MULTIPLICO E JA COMPARO COM A RESULTADO SEM
-		PRECISAR FAZER UM SEGUNDA VERIFICAÇÃO, FAÇO TUDO NO MESMO MOMENTO
-		DESSA FORMA GARANDO A RANDOMICIDADE NAS POSIÇÕES DE 50% DA MATRIZ   */
-	matriz1 = multiMatrizes(matriz1, matriz2, n);
-	matriz1 = multiMatrizes(matriz1, matX, n);	
-	matrizAleatoriaResposta = multiMatrizes(matrizAleatoriaResposta, matX, n);
-
 	// Pegando 50% das posições das matrizes e verificando se batem
+	int posicoesI[n];
+	int posicoesJ[n];
+	for (i = 0; i < n; ++i){
+		srand( (unsigned)time(NULL) );
+		posicoesI[i] = rand()%n;
+		sleep(1);
+		posicoesJ[i] = rand()%n;
+		printf("I:%d\n", posicoesI[i]);
+		printf("J:%d\n", posicoesJ[i]);
+	}
+
+	int iTemporario, jTemporario;
 	do{
-		for (i = 0; i < (n-(n/2)); ++i){
-			int iTemporario = rand()%n;
-			int jTemporario = rand()%n;
+		for (i = 0; i < n; ++i){
+			iTemporario = posicoesI[i];
+			jTemporario = posicoesJ[i];
+			// Multiplico a posição caida atraves do rand
+			if (matrizFail == 0){
+				multiMatrizes(matriz1, matriz2, iTemporario, jTemporario, n);
+				multiMatrizes(matriz1, matX, iTemporario, jTemporario, n);
+			}			
+			multiMatrizes(matrizAleatoriaResposta, matX, iTemporario, jTemporario, n); 
 			// Lembrando a Matriz1 contem resposta de 50% da multiplicação
-			if (matriz1[iTemporario][jTemporario] == matrizAleatoriaResposta[iTemporario][jTemporario])
+			if (matriz1[iTemporario][jTemporario] == matrizAleatoriaResposta[iTemporario][jTemporario]){
 				// Posivel matriz solução
 				posicaoTrue += 1;
-			else{
+				// printf("Posição true\n");
+			}else{
 				// Troco a matriz aleatoria
 				matrizRespostaAleatoria(matrizAleatoriaResposta, n);
 				matrizFail += 1;
+				posicaoTrue = 0;
+				// printf("%d\n", matrizFail);
 				break;
 			}
 		}
-	}while(posicaoTrue != constRepeat && matrizFail != constRepeat);
+	}while(posicaoTrue != n && matrizFail != constRepeat);
+
+	printf("posicaoTrue :%d\n", posicaoTrue);
+	// Verifico se bateu os 50% ou se nao encontrei
+	// if (posicaoTrue == n){
+		// Teste de Print Somente
+		for (i = 0; i < n; ++i){
+			printf("\n");
+			for (j = 0; j < n; ++j)
+				printf("%d ", matrizAleatoriaResposta[i][j]);
+		}
+		printf("\n");
+	// }else{
+		// printf("NÂO DEU NEGÂO!\n");
+	// }
 	
+
+	for (i = 0; i < n; ++i){
+			printf("\n");
+			for (j = 0; j < n; ++j)
+				printf("%d ", matriz1[i][j]);
+		}
+		printf("\n");
+
+
 
 	// Libera matX
 	for (i = 0; i < n; ++i)
@@ -146,17 +189,18 @@ int** monteCarlo(int **matriz1, int **matriz2, int n){
 	free(matrizAleatoriaResposta);
 };
 
-int** multiMatrizes(int **matriz1, int **matriz2, int n){
-	int i, j, k;
-	for (i = 0;i < n; ++i) {
-      for (j = 0; j < n; ++j) {
-        for (k = 0; k < n; ++k) {
-          matriz1[i][j] = matriz1[i][j] + (matriz1[i][k] * matriz2[k][j]); 
+void multiMatrizes(int **matriz1, int **matriz2, int iTemporario, int jTemporario, int n){
+	int k, **matrizAUX;
+	matrizAUX = (int **) malloc(n*sizeof(int*));
+	for (int i = 0; i < n; ++i)
+		matrizAUX[i] = (int *) malloc(n*sizeof(int));
 
-        }
-
-      }
-    
+    for (k = 0; k < n; ++k) {
+        matrizAUX[iTemporario][jTemporario] += (matriz1[iTemporario][k] * matriz2[k][jTemporario]); 
     }
-    return matriz1;
+    matriz1[iTemporario][jTemporario] = matrizAUX[iTemporario][jTemporario];
+
+    for (int i = 0; i < n; ++i)
+    	free(matrizAUX[i]);
+   	free(matrizAUX);
 };
