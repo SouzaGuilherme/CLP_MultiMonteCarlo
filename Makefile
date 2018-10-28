@@ -14,16 +14,16 @@ cmodularize:
 	$(CC) -c ./c/monte_carlo.c -o cmonte_carlo.o -I.
 	mv *.o ./modules/
 
+fmodularize:	
+	$(FT) -c ./fortran/matrix_initialization.f90 -o fmatrix_initialization.o 
+	$(FT) -c ./fortran/monte_carlo.f90 -o fmonte_carlo.o
+	mv *.o ./modules/
+
 c:
 	- make cmodularize
 	$(CC) ./modules/cmatrix_initialization.o ./modules/cmonte_carlo.o ./c/test.c $(CFLAGS) -o ./bin/cmontecarlo
 	- ./bin/cmontecarlo
 	- make clear
-
-fmodularize:	
-	$(FT) -c ./fortran/matrix_initialization.f90 -o fmatrix_initialization.o 
-	$(FT) -c ./fortran/monte_carlo.f90 -o fmonte_carlo.o
-	mv *.o ./modules/
 
 fortran:
 	- make fmodularize
@@ -32,17 +32,17 @@ fortran:
 	- make clear
 
 ccallf:
-	$(FT) -c ./fortran/matrix_initialization.f90 -o fmatrix_initialization.o 
 	$(CC) -c ./c/monte_carlo.c -o cmonte_carlo.o -I. -D FORTRAN
+	$(FT) -c ./fortran/matrix_initialization.f90 -ffree-form -o fmatrix_initialization.o 
 	mv *.o ./modules/
-	$(CC) ./modules/fmatrix_initialization.o ./modules/cmonte_carlo.o ./c/test.c $(CFLAGS) -o ./bin/cmontecarlo
+	$(CC) ./modules/fmatrix_initialization.o ./modules/cmonte_carlo.o ./c/test.c $(CFLAGS) -lgfortran -o ./bin/cmontecarlo
 	- ./bin/cmontecarlo
 
 fcallc:
+	$(FT) -c ./fortran/monte_carlo.f90 -ffree-form -o fmonte_carlo.o -I. 
 	$(CC) -c ./c/matrix_initialization.c -o cmatrix_initialization.o
-	$(FT) -c ./fortran/monte_carlo.f90 -o fmonte_carlo.o -I. 
 	mv *.o ./modules/
-	$(FT) ./modules/cmatrix_initialization.o ./modules/fmonte_carlo.o ./fortran/test.f90 $(CFLAGS) -o ./bin/fmontecarlo
+	$(FT) ./modules/cmatrix_initialization.o ./modules/fmonte_carlo.o ./fortran/test.f90 -o ./bin/fmontecarlo
 	- ./bin/fmontecarlo
 
 clear: 
