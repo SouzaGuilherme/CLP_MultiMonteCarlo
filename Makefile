@@ -41,7 +41,7 @@ ccallf:
 fcallc:
 	$(CC) -c ./c/monte_carlo.c -o cmonte_carlo.o -I. -D FORTRAN
 	$(FT) -c ./fortran/matrix_initialization.f90 -ffree-form -o fmatrix_initialization.o 
-	mv *.o ./modules/
+	- mv *.o ./modules/
 	$(FT) ./modules/fmatrix_initialization.o ./modules/cmonte_carlo.o -o ./bin/fcallc
 	- ./bin/fcallc
 
