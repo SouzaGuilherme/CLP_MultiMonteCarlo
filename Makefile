@@ -1,4 +1,4 @@
-.PHONY: all c fortran clear
+.PHONY: all c fortran clear cmodularize fmodularize ccallf fcallc
 
 # C
 CC = gcc
@@ -9,29 +9,41 @@ FT = gfortran
 
 all: c fortran clear
 
-c:	
-	# $(CC) -c ./c/matrix_initialization.c -I. -o ./modules/matrix_initialization.o
-	# $(CC) -c ./c/monte_carlo.c -I. -o ./modules/monte_carlo.o
-	$(CC) -c ./c/matrix_initialization.c ./c/monte_carlo.c -I. 
+cmodularize:	
+	$(CC) -c ./c/matrix_initialization.c -o cmatrix_initialization.o -I.
+	$(CC) -c ./c/monte_carlo.c -o cmonte_carlo.o -I.
 	mv *.o ./modules/
-	$(CC) ./modules/*.o ./c/test.c $(CFLAGS) -o ./bin/cmontecarlo -I.
+
+c:
+	- make cmodularize
+	$(CC) ./modules/cmatrix_initialization.o ./modules/cmonte_carlo.o ./c/test.c $(CFLAGS) -o ./bin/cmontecarlo
+	- ./bin/cmontecarlo
+	- make clear
+
+fmodularize:	
+	$(FT) -c ./fortran/matrix_initialization.f90 -o fmatrix_initialization.o 
+	$(FT) -c ./fortran/monte_carlo.f90 -o fmonte_carlo.o
+	mv *.o ./modules/
+
+fortran:
+	- make fmodularize
+	$(FT) ./modules/fmatrix_initialization.o ./modules/fmonte_carlo.o ./fortran/test.f90 -o ./bin/fmontecarlo
+	- ./bin/fmontecarlo
+	- make clear
+
+ccallf:
+	$(FT) -c ./fortran/matrix_initialization.f90 -o fmatrix_initialization.o 
+	$(CC) -c ./c/monte_carlo.c -o cmonte_carlo.o -I. -D FORTRAN
+	mv *.o ./modules/
+	$(CC) ./modules/fmatrix_initialization.o ./modules/cmonte_carlo.o ./c/test.c $(CFLAGS) -o ./bin/cmontecarlo
 	- ./bin/cmontecarlo
 
-fortran: 
-	$(FT) ./fortran/fortranMonteCarlo.f90 -o ./bin/fmontecarlo
+fcallc:
+	$(CC) -c ./c/matrix_initialization.c -o cmatrix_initialization.o
+	$(FT) -c ./fortran/monte_carlo.f90 -o fmonte_carlo.o -I. 
+	mv *.o ./modules/
+	$(FT) ./modules/cmatrix_initialization.o ./modules/fmonte_carlo.o ./fortran/test.f90 $(CFLAGS) -o ./bin/fmontecarlo
 	- ./bin/fmontecarlo
-
-modularize:
-	$(FT) -c ./fortran/matrix_initialization.f90 ./fortran/monte_carlo.f90
-	$(CC) -c ./c/matrix_initialization.c ./c/monte_carlo.c
-
-# Tests
-testc: 
-	$(CC) ./c/testeMonteCarloMultiMat.c $(CFLAGS) 
-
-testfortran: 
-	$(FT) ./fortran/monte_carlo_test.f -o ./bin/fmontecarlotest
-	- ./bin/fmontecarlotest
 
 clear: 
 	rm -f *.o exec exe ./bin/* ./modules/*.o
