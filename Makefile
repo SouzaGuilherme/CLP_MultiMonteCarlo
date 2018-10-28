@@ -14,7 +14,7 @@ c:
 	- ./bin/cmontecarlo
 
 fortran: 
-	$(FT) ./fortran/monte_carlo.f -o ./bin/fmontecarlo
+	$(FT) ./fortran/fortranMonteCarlo.f90 -o ./bin/fmontecarlo
 	- ./bin/fmontecarlo
 
 # Tests
