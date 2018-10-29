@@ -9,7 +9,7 @@
 #include "c/matrix_initialization.h"
 
 void multiMatrizes(int **matriz1, int **matriz2, int iTemporario, int jTemporario, int n);
-void montecarlo_(int **matriz1, int **matriz2, int *n);
+void montecarlo_(int *a, int *b, int *n);
 void matrizRespostaAleatoria(int **matrix, int n);
 void matrizXAleatoria(int **matrix, int n);
 
