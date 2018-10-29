@@ -31,7 +31,8 @@ end subroutine matrizXAleatoria
 SUBROUTINE multiMatrizes(matriz1, matriz2, iTemporario, jTemporario, n)
     implicit none
     INTEGER :: k, iTemporario, jTemporario, n
-    INTEGER, DIMENSION( :, : ), ALLOCATABLE :: matrizAUX, matriz1, matriz2, matrizT 
+    INTEGER, DIMENSION(n, n) :: matriz1, matriz2, matrizT
+    INTEGER, ALLOCATABLE, DIMENSION( :, : ) :: matrizAUX 
     ALLOCATE(matrizAUX(n, n))
     IF ( ALLOCATED (matrizAUX) ) THEN
         print *, "A has been allocated"
