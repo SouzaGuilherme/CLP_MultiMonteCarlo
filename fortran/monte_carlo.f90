@@ -3,26 +3,28 @@
 
 subroutine matrizRespostaAleatoria(matrix, n)
 implicit none
-   integer :: n, i, j
-   integer, dimension(n, n) :: matrix
-   do i = 1, n
-       do j = 1, n
-           call RANDOM_NUMBER(x)
-           matrix(i, j) = MOD(x, 19603)
-       end do
-   end do
+    integer :: n, i, j
+    integer :: matrix (n, n)
+    real :: x
+    do i = 1, n
+        do j = 1, n
+            call RANDOM_NUMBER(x)
+            matrix(i, j) = FLOOR(x * 19603)
+        end do
+    end do
 end subroutine matrizRespostaAleatoria
 
 subroutine matrizXAleatoria(matrix, n)
 implicit none
-   integer :: n, i, j
-   integer, dimension(n, n) :: matrix
-   do i = 1, n
-       do j = 1, n
-           call RANDOM_NUMBER(x)
-           matrix(i, j) = MOD(x, 2)
-       end do
-   end do
+    integer :: n, i, j
+    integer :: matrix (n, n)
+    real :: x
+    do i = 1, n
+        do j = 1, n
+            call RANDOM_NUMBER(x)
+            matrix(i, j) = FLOOR(x * 2)
+        end do
+    end do
 end subroutine matrizXAleatoria
 
 
