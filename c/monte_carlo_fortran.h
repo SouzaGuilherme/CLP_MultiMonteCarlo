@@ -6,8 +6,6 @@
 #include <time.h>
 #define constRepeat 1000000
 
-#include "c/matrix_initialization.h"
-
 void multiMatrizes_(int *matriz1, int *matriz2, int *iTemporario, int *jTemporario, int *n);
 void montecarlo_(int *a, int *b, int *n);
 void matrizRespostaAleatoria_(int *matrix, int *n);

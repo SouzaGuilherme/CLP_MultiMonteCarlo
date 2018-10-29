@@ -39,7 +39,7 @@ SUBROUTINE multiMatrizes(matriz1, matriz2, iTemporario, jTemporario, n)
     END IF
 
 
-    DO k = 0, n
+    DO k = 1, n
         matrizT = matriz1(iTemporario, k)  * matriz2(k ,jTemporario)
         matrizAUX(iTemporario, jTemporario) = matrizAUX(iTemporario, jTemporario) + matrizT
     END DO
