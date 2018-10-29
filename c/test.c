@@ -28,21 +28,6 @@ int main()
 		}
 	}
 
-	// Teste de Print Somente
-	for (i = 0; i < n; ++i){
-		printf("\n");
-		for (j = 0; j < n; ++j)
-			printf("%d ", matriz1[i*n + j]);
-	}
-	printf("\n");
-	for (i = 0; i < n; ++i){
-		printf("\n");
-		for (j = 0; j < n; ++j)
-			printf("%d ", matriz2[i*n + j]);
-	}
-	printf("\n");
-
-	// CHamo o metodo MonteCarlo
 	montecarlo_(matriz1, matriz2, &n);
 
 	free(matriz1);

@@ -1,5 +1,5 @@
 
-subroutine matrizRespostaAleatoria(matrix, n)
+subroutine matrizrespostaaleatoria(matrix, n)
 implicit none
     integer :: n, i, j
     integer :: matrix (n, n)
@@ -10,7 +10,7 @@ implicit none
             matrix(i, j) = FLOOR(x * 19603)
         end do
     end do
-end subroutine matrizRespostaAleatoria
+end subroutine matrizrespostaaleatoria
 
 subroutine matrizXAleatoria(matrix, n)
 implicit none
@@ -58,26 +58,12 @@ SUBROUTINE monteCarlo(matriz1, matriz2, n)
     INTEGER, DIMENSION( :, : ), ALLOCATABLE :: matX, matrizAleatoriaResposta, matriz1, matriz2
     INTEGER, DIMENSION(n) :: posicoesI, posicoesJ
     
-
-    
     ALLOCATE(matX(n, n))
-    IF ( ALLOCATED (matX) ) THEN
-        print *, "A has been allocated"
-    ELSE
-        print *, "A has not been allocated"    
-    END IF
- 
     ALLOCATE(matrizAleatoriaResposta(n,n))   
-    IF ( ALLOCATED (matrizAleatoriaResposta) ) THEN
-        print *, "A has been allocated"
-    ELSE
-        print *, "A has not been allocated"    
-    END IF
-
 
     !Gero a matriz randomica de Zeros e Uns
     CALL matrizXAleatoria(matX, n)
-    CALL matrizRespostaAleatoria(matrizAleatoriaResposta, n)
+    CALL matrizrespostaaleatoria(matrizAleatoriaResposta, n)
         
         
 
@@ -103,20 +89,17 @@ SUBROUTINE monteCarlo(matriz1, matriz2, n)
             IF(matriz1(iTemporario, jTemporario) == matrizAleatoriaResposta(iTemporario, jTemporario)) THEN
                 !Posivel matriz solução
                 posicaoTrue = posicaoTrue + 1;
-                print *, "Posicao True"
             ELSE
             !Troco a matriz aleatoria
-                CALL matrizRespostaAlteatoria(matrizAleatoriaResposta, n)
+                CALL matrizrespostaaleatoria(matrizAleatoriaResposta, n)
                 matrizFail = matrizFail + 1
                 posicaoTrue = 0
-                print *, matrizFail
                 STOP
             ENDIF
         END DO
     END DO
 
 
-    print *, posicaoTrue
     !Verifico se bateu os 50% ou se nao encontrei
     IF(posicaoTRUE == n) THEN
         ! Teste de Print Soment

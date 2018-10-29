@@ -32,10 +32,9 @@ fortran:
 	- make clear
 
 ccallf:
-	$(CC) -c ./c/matrix_initialization.c -o cmatrix_initialization.o
 	$(FT) -c ./fortran/monte_carlo.f90 -ffree-form -o fmonte_carlo.o -I. 
 	mv *.o ./modules/
-	$(CC) ./modules/cmatrix_initialization.o ./modules/fmonte_carlo.o ./c/test.c $(CFLAGS) -lgfortran -o ./bin/ccallf
+	$(CC) ./modules/fmonte_carlo.o ./c/test.c $(CFLAGS) -lgfortran -o ./bin/ccallf
 	- ./bin/ccallf
 
 fcallc:
