@@ -26,7 +26,7 @@ program main
 use matrix_initialization
 implicit none
     
-    integer :: i, j, mat_size
+    integer :: mat_size
     integer, allocatable, dimension(:, :) :: mat_a, mat_b
     
     print *, "Dimensao da matrix"

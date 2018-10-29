@@ -29,15 +29,7 @@ end subroutine matrizXAleatoria
 SUBROUTINE multiMatrizes(matriz1, matriz2, iTemporario, jTemporario, n)
     implicit none
     INTEGER :: k, iTemporario, jTemporario, n, matrizT
-    INTEGER, DIMENSION(n, n) :: matriz1, matriz2
-    INTEGER, DIMENSION( :, : ), ALLOCATABLE :: matrizAUX
-    ALLOCATE(matrizAUX(n, n))
-    IF ( ALLOCATED (matrizAUX) ) THEN
-        print *, "A has been allocated"
-    ELSE
-        print *, "A has not been allocated"    
-    END IF
-
+    INTEGER, DIMENSION(n, n) :: matriz1, matriz2, matrizAUX
 
     DO k = 1, n
         matrizT = matriz1(iTemporario, k)  * matriz2(k ,jTemporario)
@@ -45,7 +37,6 @@ SUBROUTINE multiMatrizes(matriz1, matriz2, iTemporario, jTemporario, n)
     END DO
     matriz1(iTemporario,jTemporario) = matrizAUX(iTemporario,jTemporario)
         
-    DEALLOCATE(matrizAUX)
 END SUBROUTINE multiMatrizes
 
 
@@ -55,27 +46,24 @@ END SUBROUTINE multiMatrizes
 SUBROUTINE monteCarlo(matriz1, matriz2, n)
     implicit none
     INTEGER :: i = 0, j = 0, posicaoTrue = 0, matrizFail = 0, n, iTemporario, jTemporario, seed, constRepeat
-    INTEGER, DIMENSION( :, : ), ALLOCATABLE :: matX, matrizAleatoriaResposta, matriz1, matriz2
+    INTEGER, DIMENSION(n, n) :: matX, matrizAleatoriaResposta, matriz1, matriz2
     INTEGER, DIMENSION(n) :: posicoesI, posicoesJ
-    
-    ALLOCATE(matX(n, n))
-    ALLOCATE(matrizAleatoriaResposta(n,n))   
+    REAL :: x
 
     !Gero a matriz randomica de Zeros e Uns
     CALL matrizXAleatoria(matX, n)
     CALL matrizrespostaaleatoria(matrizAleatoriaResposta, n)
         
-        
-
     DO i = 1, n
-        seed = 32764561
-        posicoesI(i) = (-1.0)**(i) * 5.0 * rand(seed)
-        posicoesJ(i) = (-1.0)**(i) * 5.0 * rand(seed)
-        print *,  posicoesI(i)
-        print *,  posicoesJ(i)
+        call RANDOM_NUMBER(x)
+        posicoesI(i) = FLOOR(x*(n-1) + 1)
+        call RANDOM_NUMBER(x)
+        posicoesJ(i) = FLOOR(x*(n-1) + 1)
     END DO
+
     constRepeat = 1000000
-     DO WHILE (posicaoTrue /= n .and. matrizFail /= constRepeat)
+
+    DO WHILE (posicaoTrue /= n .and. matrizFail /= constRepeat)
         DO i=1, n
             iTemporario = posicoesI(i)
             jTemporario = posicoesJ(i)
@@ -99,24 +87,18 @@ SUBROUTINE monteCarlo(matriz1, matriz2, n)
         END DO
     END DO
 
-
     !Verifico se bateu os 50% ou se nao encontrei
     IF(posicaoTRUE == n) THEN
         ! Teste de Print Soment
+        print *, "Matriz Resposta"
         DO i = 1, n
             DO j = 1, n
-                Print *, matrizAleatoriaResposta(i,j)
+                print *, matrizAleatoriaResposta(i,j)
             END DO
         END DO
     ELSE
-        print *, "Nao deu kkk"
+        print *, "Nao achou"
     ENDIF
-
-    DO i = 1, n
-        DO j = 1, n
-            print *, matriz1(i,j)
-        END DO
-    END DO
 
 END subroutine monteCarlo
 
