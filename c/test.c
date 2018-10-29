@@ -50,7 +50,7 @@ int main()
 	printf("\n");
 
 	// CHamo o metodo MonteCarlo
-	monteCarlo(matriz1, matriz2, n);
+	montecarlo_(matriz1, matriz2, n);
 
 	// Libero a memoria alocada para cada matriz
 	for (i = 0; i < n; ++i)
