@@ -51,15 +51,6 @@ void montecarlo_(int *a, int *b, int *n){
 		}
 	int **matX, **matrizAleatoriaResposta;
 	int i = 0, j = 0, posicaoTrue = 0, matrizFail = 0;
-	printf("~~~ %d\n", matriz1[0]);
-	printf("~~~ %d\n", matriz2[0]);
-	printf("~~~ %d\n", matriz1[1]);
-	/*for (i = 1; i <= *n; ++i)
-		for (j = 1; j <= *n; ++j)
-	 	printf("~~~ %d, ", matriz1[i][j]);
-	puts(" ");
-	*/
-
 	i = 0;
 	j = 0;
 
@@ -92,8 +83,6 @@ void montecarlo_(int *a, int *b, int *n){
 		srand( (unsigned)time(NULL) );
 		posicoesI[i] = rand()% (*n);
 		posicoesJ[i] = rand()% (*n);
-		printf("I:%d\n", posicoesI[i]);
-		printf("J:%d\n", posicoesJ[i]);
 	}
 	int iTemporario, jTemporario;
 	do{
@@ -102,7 +91,6 @@ void montecarlo_(int *a, int *b, int *n){
 			jTemporario = posicoesJ[i];
 			// Multiplico a posição caida atraves do rand
 			if (matrizFail == 0){
-				puts("Hey there");
 				multiMatrizes(matriz1, matriz2, iTemporario, jTemporario, *n);
 				multiMatrizes(matriz1, matX, iTemporario, jTemporario, *n);
 			}			
@@ -123,28 +111,31 @@ void montecarlo_(int *a, int *b, int *n){
 		}
 	}while(posicaoTrue != *n && matrizFail != constRepeat);
 
-	printf("posicaoTrue :%d\n", posicaoTrue);
-	// Verifico se bateu os 50% ou se nao encontrei
-	// if (posicaoTrue == n){
-		// Teste de Print Somente
-		for (i = 0; i < *n; ++i){
-			printf("\n");
-			for (j = 0; j < *n; ++j)
-				printf("%d ", matrizAleatoriaResposta[i][j]);
-		}
-		printf("\n");
-	// }else{
-		// printf("NÂO DEU NEGÂO!\n");
-	// }
-	
 
+	puts("Matriz A");
 	for (i = 0; i < *n; ++i){
-			printf("\n");
-			for (j = 0; j < *n; ++j)
-				printf("%d ", matriz1[i][j]);
-		}
 		printf("\n");
+		for (j = 0; j < *n; ++j)
+			printf("%d ", matriz1[i][j]);
+	}
+	printf("\n");
 
+	puts("Matriz B");
+	for (i = 0; i < *n; ++i){
+		printf("\n");
+		for (j = 0; j < *n; ++j)
+			printf("%d ", matriz2[i][j]);
+	}
+	printf("\n\n");
+
+	// Teste de Print Somente
+	puts("Matrix aleatoria resposta");
+	for (i = 0; i < *n; ++i){
+		printf("\n");
+		for (j = 0; j < *n; ++j)
+			printf("%d ", matrizAleatoriaResposta[i][j]);
+	}
+	printf("\n");
 
 
 	// Libera matX
