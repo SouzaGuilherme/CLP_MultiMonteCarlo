@@ -4,7 +4,7 @@
  */
 #include "matrix_initialization.h"
 // Apenas a assinatura das funções implementadas em fortran
-#include "monte_carlo.h"
+#include "monte_carlo_fortran.h"
 
 int main() 
 {
