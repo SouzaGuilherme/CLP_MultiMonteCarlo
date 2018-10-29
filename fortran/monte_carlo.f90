@@ -1,5 +1,3 @@
-! Modulo para calculo da matrix
-! (Para C chamar)
 
 subroutine matrizRespostaAleatoria(matrix, n)
 implicit none
@@ -30,9 +28,8 @@ end subroutine matrizXAleatoria
 
 SUBROUTINE multiMatrizes(matriz1, matriz2, iTemporario, jTemporario, n)
     implicit none
-    INTEGER :: k, iTemporario, jTemporario, n
-    INTEGER, DIMENSION(n, n) :: matriz1, matriz2, matrizT
-    INTEGER, ALLOCATABLE, DIMENSION( :, : ) :: matrizAUX 
+    INTEGER :: k, iTemporario, jTemporario, n, matrizT
+    INTEGER, DIMENSION( :, : ), ALLOCATABLE :: matrizAUX, matriz1, matriz2
     ALLOCATE(matrizAUX(n, n))
     IF ( ALLOCATED (matrizAUX) ) THEN
         print *, "A has been allocated"
@@ -56,11 +53,12 @@ END SUBROUTINE multiMatrizes
 
 SUBROUTINE monteCarlo(matriz1, matriz2, n)
     implicit none
-
-    INTEGER :: i = 0, j = 0, posicaoTrue = 0, matrizFail = 0, matriz1, matriz2, n, iTemporario, jTemporario, seed
-    INTEGER, DIMENSION( :, : ), ALLOCATABLE :: matX, matrizAleatoriaResposta
+    INTEGER :: i = 0, j = 0, posicaoTrue = 0, matrizFail = 0, n, iTemporario, jTemporario, seed, constRepeat
+    INTEGER, DIMENSION( :, : ), ALLOCATABLE :: matX, matrizAleatoriaResposta, matriz1, matriz2
     INTEGER, DIMENSION(n) :: posicoesI, posicoesJ
-        
+    
+
+    
     ALLOCATE(matX(n, n))
     IF ( ALLOCATED (matX) ) THEN
         print *, "A has been allocated"
@@ -89,7 +87,7 @@ SUBROUTINE monteCarlo(matriz1, matriz2, n)
         print *,  posicoesI(i)
         print *,  posicoesJ(i)
     END DO
-
+    constRepeat = 1000000
      DO WHILE (posicaoTrue /= n .and. matrizFail /= constRepeat)
         DO i=1, n
             iTemporario = posicoesI(i)
@@ -137,3 +135,4 @@ SUBROUTINE monteCarlo(matriz1, matriz2, n)
     END DO
 
 END subroutine monteCarlo
+
