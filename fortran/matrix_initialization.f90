@@ -3,12 +3,6 @@
 ! e inclui calculo feito em c
 ! Gera executavel
 
-module GLOBAL
-    IMPLICIT none
-    INTEGER :: seed
-end module
-
-! Precisa implementar
 module matrix_initialization
 implicit none
 
@@ -29,7 +23,6 @@ contains
 end module
 
 program main
-use global
 use matrix_initialization
 implicit none
     
